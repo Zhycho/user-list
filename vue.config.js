@@ -1,3 +1,4 @@
+const path = require("path");
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -10,4 +11,7 @@ module.exports = defineConfig({
     .loader('pug-plain-loader')
     .end();
   },
+  publicPath: process.env.NODE_ENV === 'production'
+    ? path.resolve(__dirname, 'dist')
+    : '/'
 })
