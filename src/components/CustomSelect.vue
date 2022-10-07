@@ -1,3 +1,32 @@
+<script setup>
+import { ref } from 'vue';
+
+const props = defineProps({
+    selectName: {
+        type: String,
+        requred: true
+    },
+    options: {
+        type: Array,
+        requred: true
+    },
+    placeholder: {
+        type: String,
+        default: ''
+    }
+})
+
+const emit = defineEmits(['chosenOptionChanged']);
+const chosenOption = ref(null);
+
+function selectChangeHandler() {
+    emit('chosenOptionChanged', {
+        valueKey: props.selectName,
+        value: chosenOption
+    });
+}
+</script>
+
 <template lang="pug">
 a-select(
     v-model:value="chosenOption"
@@ -8,39 +37,6 @@ a-select(
 )
     a-select-option(v-for="option in options" :value="option" :key="option") {{ option }}
 </template>
-
-<script>
-export default {
-    name: 'CustomSelect',
-    props: {
-        selectName: {
-            type: String,
-            requred: true
-        },
-        options: {
-            type: Array,
-            requred: true
-        },
-        placeholder: {
-            type: String,
-            default: ''
-        }
-    },
-    data() {
-        return {
-            chosenOption: null
-        }
-    },
-    methods: {
-        selectChangeHandler() {
-            this.$emit('chosenOptionChanged', {
-                valueKey: this.selectName,
-                value: this.chosenOption
-            });
-        }
-    }
-}
-</script>
 
 <style lang="scss" scoped>
 	.select {

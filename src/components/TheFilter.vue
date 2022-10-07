@@ -1,3 +1,16 @@
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import CustomSelect from './CustomSelect';
+
+const store = useStore();
+
+const countryParams = computed(() => store.getters.countryParams);
+const scoreParams = computed(() => store.getters.scoreParams);
+
+const setFilterValue = (payload) => store.dispatch('setFilterValue', payload);
+</script>
+
 <template lang="pug">
 a-row(
     :gutter="[16, 16]"
@@ -19,21 +32,3 @@ a-row(
             @chosenOptionChanged="setFilterValue"
         )
 </template>
-
-<script>
-import CustomSelect from './CustomSelect';
-import { mapGetters, mapActions } from 'vuex';
-
-export default {
-    name: 'TheFilter',
-    components: {
-        CustomSelect
-    },
-    computed: {
-        ...mapGetters(['countryParams', 'scoreParams']),
-    },
-    methods: {
-        ...mapActions(['setFilterValue']),
-    }
-}
-</script>

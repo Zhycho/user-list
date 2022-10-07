@@ -1,3 +1,39 @@
+<script setup>
+import { computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { StarFilled }  from '@ant-design/icons-vue';
+
+const store = useStore()
+
+const usersOnly = computed(() => store.getters.usersOnly);
+const filterValues = computed(() => store.state.filterValues);
+const filteredUsers = computed(() => {
+    let filteredUsers = usersOnly.value;
+    if (filterValues.value.country) filteredUsers = filteredUsers.filter((item) => item.country === filterValues.value.country);
+    if (filterValues.value.score) filteredUsers = filteredUsers.filter((item) => filterByScore(item.score));
+    return filteredUsers;
+});
+
+function filterByScore(scoreValue) {
+    const pureFilterValue = filterValues.value.score.match(/\d+/)[0];
+    if (/>/.test(filterValues.value.score)) {
+        return scoreValue > pureFilterValue;
+    } else if (/</.test(filterValues.value.score)) {
+        return scoreValue < pureFilterValue;
+    }
+    return +scoreValue === +pureFilterValue;
+}
+
+function isShowItemBottom(item) {
+    return item.score && item.country;
+}
+
+const setDataUsers = () => store.dispatch('setDataUsers');
+onMounted(() => {
+    // setDataUsers(); // т.к. изначально есть TEST_DATA
+});
+</script>
+
 <template lang="pug">
 a-list(:data-source="filteredUsers" bordered item-layout="horizontal" class="list")
     template(#renderItem="{ item }")
@@ -16,46 +52,6 @@ a-list(:data-source="filteredUsers" bordered item-layout="horizontal" class="lis
                         span.score-value(v-if="item.score") {{ item.score }}
                             star-filled(class="star-icon")
 </template>
-
-<script>
-import { mapState, mapGetters, mapActions } from 'vuex';
-import { StarFilled }  from '@ant-design/icons-vue';
-
-export default {
-    name: 'TheList',
-    components: {
-        StarFilled
-    },
-    computed: {
-        ...mapState(['filterValues']),
-        ...mapGetters(['usersOnly']),
-        filteredUsers() {
-            let filteredUsers = this.usersOnly;
-            if (this.filterValues.country) filteredUsers = filteredUsers.filter((item) => item.country === this.filterValues.country)
-            if (this.filterValues.score) filteredUsers = filteredUsers.filter((item) => this.filterByScore(item.score));
-            return filteredUsers;
-        }
-    },
-    mounted() {
-        // this.setDataUsers(); // т.к. изначально есть TEST_DATA
-    },
-    methods: {
-        ...mapActions(['setDataUsers']),
-        filterByScore(scoreValue) {
-            const pureFilterValue = this.filterValues.score.match(/\d+/)[0];
-            if (/>/.test(this.filterValues.score)) {
-                return scoreValue > pureFilterValue;
-            } else if (/</.test(this.filterValues.score)) {
-                return scoreValue < pureFilterValue;
-            }
-            return +scoreValue === +pureFilterValue;
-        },
-        isShowItemBottom(item) {
-            return item.score && item.country;
-        }
-    }
-}
-</script>
 
 <style lang="scss" scoped>
     .clickable {

@@ -1,3 +1,8 @@
+<script setup>
+import UserList from "./components/UserList";
+import TheFilter from "./components/TheFilter";
+</script>
+
 <template lang="pug">
 a-layout(class="layout")
 	a-layout-content(class="content-container")
@@ -9,21 +14,8 @@ a-layout(class="layout")
 			a-col(:span="24" :md="8")
 				TheFilter
 			a-col(:span="24" :md="16")
-				TheList
+				UserList
 </template>
-
-<script>
-import TheList from "./components/TheList";
-import TheFilter from "./components/TheFilter";
-
-export default {
-	name: "App",
-	components: {
-		TheFilter,
-		TheList,
-	}
-};
-</script>
 
 <style lang="scss" scoped>
 	.layout {
