@@ -16,7 +16,11 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['chosenOptionChanged']);
+const emit = defineEmits({
+    chosenOptionChanged({ valueKey, value }) {
+        return valueKey && value;
+    }
+});
 const chosenOption = ref(null);
 
 function selectChangeHandler() {
